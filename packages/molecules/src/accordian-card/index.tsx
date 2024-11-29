@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
+
 export interface CardProps {
   key: string | number;
   bgcolor: string;
@@ -35,12 +36,29 @@ const AccordionCard: React.FC<CardProps> = ({
   buttonText,
   buttonVariant,
   buttonStyle,
+  onButtonClick,
   onClick,
   icon,
   isAccordion = false,
   InfoCard,
 }) => {
   const [expanded, setExpanded] = useState<boolean>(false);
+
+  const handleAccordionClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (onClick) {
+      onClick(e);
+    }
+    if (isAccordion) {
+      setExpanded(!expanded);
+    }
+  };
+
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    if (onButtonClick) {
+      onButtonClick();
+    }
+  };
 
   return (
     <Accordion
@@ -54,7 +72,7 @@ const AccordionCard: React.FC<CardProps> = ({
         backgroundColor: bgcolor,
         border: 'none !important',
       }}
-      onClick={onClick}
+      onClick={handleAccordionClick}
     >
       <AccordionSummary
         aria-controls={`panel-${key}-content`}
@@ -92,10 +110,7 @@ const AccordionCard: React.FC<CardProps> = ({
                 variant={buttonVariant}
                 size="large"
                 sx={buttonStyle}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  //   onButtonClick();
-                }}
+                onClick={handleButtonClick}
               >
                 {buttonText}
               </Button>
@@ -108,7 +123,6 @@ const AccordionCard: React.FC<CardProps> = ({
               color="#fff"
               fontWeight={600}
               fontSize={'13px'}
-              onClick={() => setExpanded(!expanded)}
               display="flex"
               justifyContent="center"
               alignItems="center"
@@ -140,4 +154,4 @@ const AccordionCard: React.FC<CardProps> = ({
   );
 };
 
-export { AccordionCard };
+export default AccordionCard;
